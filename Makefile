@@ -1,3 +1,6 @@
+include .env
+export
+
 .PHONY: run build test clean dev
 
 # Run the application
@@ -44,3 +47,16 @@ deps:
 	@go mod download
 	@go mod tidy
 	@echo "✓ Dependencies updated"
+
+# Migrations
+migrate-up:
+	@goose -dir sql/migrations postgres "$(DB_URL)" up
+
+migrate-down:
+	@goose -dir sql/migrations postgres "$(DB_URL)" down
+
+migrate-status:
+	@goose -dir sql/migrations postgres "$(DB_URL)" status
+
+migrate-reset:
+	@goose -dir sql/migrations postgres "$(DB_URL)" down-to 0
